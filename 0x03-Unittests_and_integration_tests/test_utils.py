@@ -30,7 +30,8 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
         error = str(context.exception)
-        self.assertEqual(error, "'{}'".format(key))
+        expected = "'" + key + "'"
+        self.assertEqual(error, expected)
 
 
 class TestGetJson(unittest.TestCase):
@@ -79,3 +80,4 @@ class TestMemoize(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
