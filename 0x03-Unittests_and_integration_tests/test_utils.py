@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit tests for utils.access_nested_map
+Unit tests for utils module.
 """
 
 import unittest
@@ -29,9 +29,9 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test access_nested_map raises KeyError for missing keys."""
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
-        self.assertEqual(str(context.exception), f"'{key}'")  
-        
-        
+        self.assertEqual(str(context.exception), f"'{key}'")
+
+
 class TestGetJson(unittest.TestCase):
     """Unit test for utils.get_json"""
 
@@ -49,8 +49,9 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
 
             mock_get.assert_called_once_with(test_url)
-            self.assertEqual(result, test_payload)    
-            
+            self.assertEqual(result, test_payload)
+
+
 class TestMemoize(unittest.TestCase):
     """Tests for the memoize decorator."""
 
@@ -72,7 +73,8 @@ class TestMemoize(unittest.TestCase):
 
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
-            mock_method.assert_called_once()  
+            mock_method.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()
