@@ -30,3 +30,9 @@ class GithubOrgClient:
     def public_repos(self):
         """Return names of public repositories."""
         return [repo["name"] for repo in get_json(self._public_repos_url)]
+    
+    @staticmethod
+    def has_license(repo, license_key):
+        """Check if the repository has a specific license."""
+        return repo.get("license", {}).get("key") == license_key
+
