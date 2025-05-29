@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Client module to interface with GitHub API."""
 import requests
+from functools import wraps
 
 
 def get_json(url):
@@ -10,14 +11,14 @@ def get_json(url):
 
 
 class GithubOrgClient:
-    ORG_URL = "https://api.github.com/orgs/{}"
+    ORG_URL = "https://api.github.com/orgs/{org_name}"
 
     def __init__(self, org_name):
         self.org_name = org_name
 
     @property
     def org(self):
-        return get_json(self.ORG_URL.format(self.org_name))
+        return get_json(self.ORG_URL.format(org_name=self.org_name))
 
     @property
     def _public_repos_url(self):
@@ -26,17 +27,11 @@ class GithubOrgClient:
     def public_repos(self, license=None):
         """Return list of public repos. If license is specified, filter by license."""
         repos = get_json(self._public_repos_url)
-        repo_names = [repo["name"] for repo in repos]
-
-        if license is None:
-            return repo_names
-
-        # Filter by license
-        return [
-            repo["name"]
-            for repo in repos
-            if repo.get("license", {}).get("key") == license
-        ]
+        
+        if license:
+            return [repo["name"] for repo in repos 
+                    if repo.get("license", {}).get("key") == license]
+        return [repo["name"] for repo in repos]
 
     @staticmethod
     def has_license(repo, license_key):

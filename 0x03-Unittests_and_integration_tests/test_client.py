@@ -5,8 +5,6 @@ import unittest
 from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-
-# Do NOT statically import fixtures here — this causes import issues in ALX checker
 import fixtures
 
 
