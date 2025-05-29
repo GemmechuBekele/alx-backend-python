@@ -29,7 +29,7 @@ class TestGithubOrgClient(unittest.TestCase):
         )
 
     def test_public_repos_url(self):
-        """Test that _public_repos_url returns the expected URL."""
+        """Test that _public_repos_url returns expected repos URL."""
         expected_url = "https://api.github.com/orgs/google/repos"
         payload = {"repos_url": expected_url}
 
@@ -71,4 +71,4 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
