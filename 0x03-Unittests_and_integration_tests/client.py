@@ -10,8 +10,6 @@ def get_json(url):
 
 
 class GithubOrgClient:
-    """GitHub Organization client."""
-
     ORG_URL = "https://api.github.com/orgs/{}"
 
     def __init__(self, org_name):
@@ -19,20 +17,27 @@ class GithubOrgClient:
 
     @property
     def org(self):
-        """Get organization information."""
         return get_json(self.ORG_URL.format(self.org_name))
 
     @property
     def _public_repos_url(self):
-        """Get public repositories URL from organization payload."""
-        return self.org.get("repos_url")
+        return self.org["repos_url"]
 
-    def public_repos(self):
-        """Return names of public repositories."""
-        return [repo["name"] for repo in get_json(self._public_repos_url)]
-    
+    def public_repos(self, license=None):
+        """Return list of public repos. If license is specified, filter by license."""
+        repos = get_json(self._public_repos_url)
+        repo_names = [repo["name"] for repo in repos]
+
+        if license is None:
+            return repo_names
+
+        # Filter by license
+        return [
+            repo["name"]
+            for repo in repos
+            if repo.get("license", {}).get("key") == license
+        ]
+
     @staticmethod
     def has_license(repo, license_key):
-        """Check if the repository has a specific license."""
         return repo.get("license", {}).get("key") == license_key
-
