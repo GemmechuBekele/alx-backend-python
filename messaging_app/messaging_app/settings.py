@@ -132,3 +132,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
+
+AUTHOR_USER_MODEL = 'chats.user'
