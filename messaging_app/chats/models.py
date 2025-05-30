@@ -9,7 +9,7 @@ class User(AbstractUser):
     Currently inherits all default fields: username, email, password, etc.
     """
     # Future custom fields can be added here
-    user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     first_name = models.CharField(max_length=150, blank=True, null=True)
     last_name = models.CharField(max_length=150, blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
