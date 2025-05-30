@@ -133,4 +133,4 @@ REST_FRAMEWORK = {
     ],
 }
 
-AUTHOR_USER_MODEL = 'chats.user'
+AUTH_USER_MODEL = 'chats.User'
