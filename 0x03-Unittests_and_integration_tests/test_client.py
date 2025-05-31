@@ -96,7 +96,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.mock_get = cls.get_patcher.start()
 
         def side_effect(url, *args, **kwargs):
-            if url == GithubOrgClient.ORG_URL.format("test_org"):
+            if url == GithubOrgClient.ORG_URL.format(org_name="test_org"):
                 mock_response = Mock()
                 mock_response.json.return_value = cls.org_payload
                 return mock_response
