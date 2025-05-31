@@ -2,6 +2,7 @@
 """Unittests and integration tests for GithubOrgClient."""
 
 import fixtures
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized, parameterized_class
