@@ -129,7 +129,4 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.defaultTestLoader.loadTestsFromName("test_client")
-    result = unittest.TextTestRunner(verbosity=0).run(suite)
-    print("OK" if result.wasSuccessful() else "FAILED")
-
+    unittest.main()
