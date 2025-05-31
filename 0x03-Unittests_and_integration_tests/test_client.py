@@ -7,8 +7,6 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
-
-
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for the GithubOrgClient class."""
 
@@ -49,31 +47,31 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_public_repos(self, mock_get_json):
         """Test that public_repos returns expected list of repo names."""
         payload = [
-            {"name": "repo1"},
-            {"name": "repo2"},
-            {"name": "repo3"},
+            {"name": "repo1", "license": {"key": "mit"}},
+            {"name": "repo2", "license": {"key": "apache-2.0"}},
+            {"name": "repo3", "license": None},
         ]
         mock_get_json.return_value = payload
 
         with patch.object(
             GithubOrgClient, "_public_repos_url", new_callable=PropertyMock
         ) as mock_url:
-            mock_url.return_value = (
-                "https://api.github.com/orgs/fakeorg/repos"
-            )
-
+            mock_url.return_value = "https://api.github.com/orgs/fakeorg/repos"
+            
             client = GithubOrgClient("fakeorg")
-            result = client.public_repos()
-
-            self.assertEqual(result, ["repo1", "repo2", "repo3"])
-            mock_url.assert_called_once()
-            mock_get_json.assert_called_once_with(
-                "https://api.github.com/orgs/fakeorg/repos"
-            )
+            # Test without license filter
+            self.assertEqual(client.public_repos(), ["repo1", "repo2", "repo3"])
+            # Test with license filter
+            self.assertEqual(client.public_repos(license="apache-2.0"), ["repo2"])
+            
+            mock_url.assert_called()
+            mock_get_json.assert_called_with("https://api.github.com/orgs/fakeorg/repos")
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
+        ({}, "my_license", False),
+        ({"license": {}}, "my_license", False),
     ])
     def test_has_license(self, repo, license_key, expected):
         """Test has_license method returns correct boolean value."""
@@ -96,12 +94,16 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
 
+        # Use consistent org_url formatting
+        org_url = "https://api.github.com/orgs/test_org"
+        repos_url = org_payload["repos_url"]
+
         def side_effect(url, *args, **kwargs):
-            if url == GithubOrgClient.ORG_URL.format(org_name="test_org"):
+            if url == org_url:
                 mock_response = Mock()
                 mock_response.json.return_value = cls.org_payload
                 return mock_response
-            elif url == cls.org_payload["repos_url"]:
+            elif url == repos_url:
                 mock_response = Mock()
                 mock_response.json.return_value = cls.repos_payload
                 return mock_response
