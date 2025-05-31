@@ -111,9 +111,17 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-@parameterized_class(('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'), [
-    (TEST_ORG_PAYLOAD, TEST_REPOS_PAYLOAD, TEST_EXPECTED_REPOS, TEST_APACHE2_REPOS)
-])
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    [
+        (
+            TEST_ORG_PAYLOAD,
+            TEST_REPOS_PAYLOAD,
+            TEST_EXPECTED_REPOS,
+            TEST_APACHE2_REPOS,
+        )
+    ]
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests using fixtures and mocking external calls."""
 
