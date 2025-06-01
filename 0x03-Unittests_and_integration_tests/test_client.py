@@ -3,7 +3,11 @@
 
 import unittest
 from unittest.mock import patch, PropertyMock, Mock
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
+try:
+    from parameterized import parameterized_class
+except ImportError:
+    from parameterized import parameterizedClass as parameterized_class
 from client import GithubOrgClient
 
 # Define test fixtures directly in test file
@@ -135,6 +139,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             cls.repos_payload
         ]
         cls.mock_get.return_value.status_code = 200
+        cls.mock_get.return_value.ok = True
 
     @classmethod
     def tearDownClass(cls):
