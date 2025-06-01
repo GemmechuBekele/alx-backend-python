@@ -5,9 +5,9 @@ import unittest
 from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized
 try:
-    from parameterized import parameterized_class
+    from parameterized import parameterized_class as parameterizedClass
 except ImportError:
-    from parameterized import parameterizedClass as parameterized_class
+    from parameterized import parameterizedClass
 from client import GithubOrgClient
 
 # Define test fixtures directly in test file
@@ -115,17 +115,14 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
-@parameterized_class(
-    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
-    [
-        (
-            TEST_ORG_PAYLOAD,
-            TEST_REPOS_PAYLOAD,
-            TEST_EXPECTED_REPOS,
-            TEST_APACHE2_REPOS,
-        )
-    ]
-)
+@parameterizedClass([
+    {
+        "org_payload": TEST_ORG_PAYLOAD,
+        "repos_payload": TEST_REPOS_PAYLOAD,
+        "expected_repos": TEST_EXPECTED_REPOS,
+        "apache2_repos": TEST_APACHE2_REPOS,
+    }
+])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests using fixtures and mocking external calls."""
 
@@ -134,12 +131,18 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Start patching requests.get with fixture-based side_effect."""
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
-        cls.mock_get.return_value.json.side_effect = [
-            cls.org_payload,
-            cls.repos_payload
-        ]
-        cls.mock_get.return_value.status_code = 200
-        cls.mock_get.return_value.ok = True
+
+        # Create mock response objects
+        mock_response_org = Mock()
+        mock_response_org.json.return_value = cls.org_payload
+        mock_response_org.status_code = 200
+
+        mock_response_repos = Mock()
+        mock_response_repos.json.return_value = cls.repos_payload
+        mock_response_repos.status_code = 200
+
+        # Set side effect to return these mock responses in order
+        cls.mock_get.side_effect = [mock_response_org, mock_response_repos]
 
     @classmethod
     def tearDownClass(cls):
