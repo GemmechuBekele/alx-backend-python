@@ -128,12 +128,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Start patching requests.get with fixture-based side_effect."""
-        cls.get_patcher = patch('client.requests.get')
+        cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
         cls.mock_get.return_value.json.side_effect = [
             cls.org_payload,
             cls.repos_payload
         ]
+        cls.mock_get.return_value.status_code = 200
 
     @classmethod
     def tearDownClass(cls):
