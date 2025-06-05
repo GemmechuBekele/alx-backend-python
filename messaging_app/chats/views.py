@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsConversationParticipant, IsMessageRelated
+from .permissions import IsParticipantOfConversation
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -12,9 +13,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
     ViewSet for managing conversations.
     Provides CRUD operations for Conversation model.
     """
+    queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     def get_queryset(self):
         # Return only conversations where the user is a participant
@@ -46,9 +48,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     ViewSet for managing messages.
     Provides CRUD operations for Message model.
     """
+    queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     def get_queryset(self):
         # Return only messages in conversations where the user is a participant
