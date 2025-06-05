@@ -1,47 +1,21 @@
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
-class IsConversationParticipant(permissions.BasePermission):
+class IsOwnerOrReadOnly(BasePermission):
     """
-    Allows access only to participants of the conversation.
+    Custom permission to only allow owners of an object to edit it.
     """
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in ['GET', 'HEAD', 'OPTIONS']:
+            return True
 
+        # Write permissions are only allowed to the owner of the object.
+        return obj.user == request.user
+
+class IsConversationParticipant(BasePermission):
+    """
+    Custom permission to only allow participants of a conversation to view it.
+    """
     def has_object_permission(self, request, view, obj):
         return request.user in obj.participants.all()
-
-
-class IsMessageRelated(permissions.BasePermission):
-    """
-    Allows access to messages only if the user is the sender or a participant
-    of the related conversation.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        return (
-            obj.sender == request.user or
-            request.user in obj.conversation.participants.all()
-        )
-
-class IsParticipantOfConversation(permissions.BasePermission):
-    """
-    Custom permission to allow only participants of a conversation to access it.
-    """
-
-    def has_permission(self, request, view):
-        # Ensure the user is authenticated
-        return request.user and request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        """
-        Object-level permission.
-        obj can be a Message or a Conversation.
-        We assume obj has a `conversation` field which has a `participants` many-to-many field.
-        """
-        # If obj is a Conversation, check if user is in participants
-        if hasattr(obj, 'participants'):
-            return request.user in obj.participants.all()
-
-        # If obj is a Message, check if user is in the conversation's participants
-        if hasattr(obj, 'conversation') and hasattr(obj.conversation, 'participants'):
-            return request.user in obj.conversation.participants.all()
-
-        return False
