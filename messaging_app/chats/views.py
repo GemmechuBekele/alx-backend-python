@@ -100,6 +100,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     search_fields = ['content']
     permission_classes = [permissions.IsAuthenticated, IsParticipant]
     pagination_class = MessagePagination
+    filter_backends = [filters.DjangoFilterBackend]  # For custom filtering
+
 
     def get_queryset(self):
         """
