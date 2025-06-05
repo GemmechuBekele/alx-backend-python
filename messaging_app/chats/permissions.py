@@ -12,7 +12,7 @@ class IsAuthenticated(permissions.IsAuthenticated):
         return bool(request.user and request.user.is_authenticated)
 
 
-class IsParticipant(BasePermission):
+class IsParticipant(permissions.BasePermission):
     """
     Checks if user is a participant in the conversation.
     Applies to all message operations (send, view, update, delete).

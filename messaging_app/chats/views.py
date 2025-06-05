@@ -1,7 +1,7 @@
-from rest_framework import viewsets, status, filters
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters import rest_framework as filters
 from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import (
@@ -12,8 +12,12 @@ from .serializers import (
 from .permissions import (
     IsConversationParticipant,
     IsMessageOwner,
-    IsParticipantOrAdmin
+    IsParticipantOrAdmin,
+    IsParticipant
 )
+from .filters import MessageFilter
+from .pagination import MessagePagination
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     """
@@ -24,7 +28,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['created_at', 'updated_at']
     search_fields = ['participants__username']
-    permission_classes = [IsAuthenticated, IsParticipantOrAdmin]
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOrAdmin]
 
     def get_queryset(self):
         """
@@ -79,16 +83,23 @@ class ConversationViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+
 class MessageViewSet(viewsets.ModelViewSet):
     """
-    ViewSet for Message model with custom permissions and filtering.
+    ViewSet for Message model with pagination, filtering, and custom permissions.
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    ordering_fields = ['timestamp']
+    filter_backends = [
+        filters.DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter
+    ]
+    filterset_class = MessageFilter
+    ordering_fields = ['timestamp', 'created_at']
     search_fields = ['content']
-    permission_classes = [IsAuthenticated, IsMessageOwner]
+    permission_classes = [permissions.IsAuthenticated, IsParticipant]
+    pagination_class = MessagePagination
 
     def get_queryset(self):
         """
@@ -113,10 +124,12 @@ class MessageViewSet(viewsets.ModelViewSet):
         Automatically set the sender to the current user
         and mark as unread for other participants.
         """
-        message = serializer.save(sender=self.request.user)
+        conversation_id = self.request.data.get('conversation_id')
+        conversation = Conversation.objects.get(id=conversation_id)
+        message = serializer.save(sender=self.request.user, conversation=conversation)
 
         # Mark as unread for all participants except sender
-        message.conversation.participants.exclude(
+        conversation.participants.exclude(
             pk=self.request.user.pk
         ).update(unread_messages=True)
 
@@ -138,12 +151,13 @@ class MessageViewSet(viewsets.ModelViewSet):
             status=status.HTTP_403_FORBIDDEN
         )
 
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for User model (read-only).
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
