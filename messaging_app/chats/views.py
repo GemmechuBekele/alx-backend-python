@@ -1,7 +1,7 @@
-from rest_framework import viewsets, status, permissions
+from rest_framework import viewsets, status, filters, generics, permissions
+from django_filters import rest_framework as django_filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django_filters import rest_framework as filters
 from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import (
@@ -17,6 +17,12 @@ from .permissions import (
 )
 from .filters import MessageFilter
 from .pagination import MessagePagination
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -25,7 +31,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    filter_backends = [
+        django_filters.DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter
+    ]
     ordering_fields = ['created_at', 'updated_at']
     search_fields = ['participants__username']
     permission_classes = [permissions.IsAuthenticated, IsParticipantOrAdmin]
@@ -91,7 +101,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = [
-        filters.DjangoFilterBackend,
+        django_filters.DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter
     ]
@@ -100,8 +110,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     search_fields = ['content']
     permission_classes = [permissions.IsAuthenticated, IsParticipant]
     pagination_class = MessagePagination
-    filter_backends = [filters.DjangoFilterBackend]  # For custom filtering
-
 
     def get_queryset(self):
         """
