@@ -1,5 +1,6 @@
-from rest_framework.permissions import BasePermission
+# messaging_app/chats/permissions.py
 from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
 class IsAuthenticated(permissions.IsAuthenticated):
     """
@@ -12,7 +13,7 @@ class IsAuthenticated(permissions.IsAuthenticated):
         return bool(request.user and request.user.is_authenticated)
 
 
-class IsParticipant(permissions.BasePermission):
+class IsParticipant(BasePermission):
     """
     Checks if user is a participant in the conversation.
     Applies to all message operations (send, view, update, delete).
@@ -27,6 +28,44 @@ class IsParticipant(permissions.BasePermission):
         elif hasattr(obj, 'participants'):
             return request.user in obj.participants.all()
         return False
+
+
+class IsMessageOwner(BasePermission):
+    """
+    Checks if the user is the owner of the message.
+    """
+    message = 'You must be the message owner to perform this action.'
+
+    def has_object_permission(self, request, view, obj):
+        return obj.sender == request.user
+
+
+class IsParticipantOrAdmin(BasePermission):
+    """
+    Allows access to participants or admin users.
+    """
+    message = 'You must be a participant or admin to access this resource.'
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
+        # For Message objects
+        if hasattr(obj, 'conversation'):
+            return request.user in obj.conversation.participants.all()
+        # For Conversation objects
+        elif hasattr(obj, 'participants'):
+            return request.user in obj.participants.all()
+        return False
+
+
+class IsConversationParticipant(BasePermission):
+    """
+    Specifically checks if user is a participant of the conversation.
+    """
+    message = 'You must be a participant of this conversation.'
+
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.participants.all()
 
 
 class IsMessageOwnerOrParticipant(BasePermission):
