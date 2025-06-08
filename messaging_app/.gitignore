@@ -21,7 +21,7 @@ var/
 *.egg
 
 # Django stuff
-*.log
+
 *.pot
 *.pyc
 local_settings.py
