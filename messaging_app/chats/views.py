@@ -134,7 +134,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         Automatically set the sender to the current user
         and mark as unread for other participants.
         """
-        conversation_id = self.request.data.get('conversation_id')
+        conversation_id = self.request.data.get('conversation')
         conversation = Conversation.objects.get(id=conversation_id)
         message = serializer.save(sender=self.request.user, conversation=conversation)
 

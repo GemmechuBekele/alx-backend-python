@@ -48,7 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_number']  # Removed username/first_name/last_name as your model doesn't have them
+        fields = ['id', 'email', 'phone_number', 'extra_note'] 
         extra_kwargs = {
             'id': {'read_only': True}
         }
