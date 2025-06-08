@@ -1,119 +1,275 @@
 {
-  "info": {
-    "name": "Messaging App API",
-    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
-    "description": "Postman collection to test Messaging App API endpoints, including JWT authentication.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "User Login - Get JWT Token",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"username\": \"your_username\",\n  \"password\": \"your_password\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:8000/api/token/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "token", ""]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create Conversation",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{jwt_token}}",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"participants\": [1, 2]\n}"
-        },
-        "url": {
-          "raw": "http://localhost:8000/api/conversations/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "conversations", ""]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Send Message",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{jwt_token}}",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"conversation\": \"<conversation_uuid>\",\n  \"message_body\": \"Hello, this is a test message!\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:8000/api/messages/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "messages", ""]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Conversations",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{jwt_token}}",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8000/api/conversations/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "8000",
-          "path": ["api", "conversations", ""]
-        }
-      },
-      "response": []
-    }
-  ],
-  "variable": [
-    {
-      "key": "jwt_token",
-      "value": ""
-    }
-  ]
+	"info": {
+		"_postman_id": "6aeb5134-ce85-4b34-a1de-1378be8b7520",
+		"name": "message",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45656967",
+		"_collection_link": "https://gemmechu.postman.co/workspace/Gemmechu's-Workspace~c05c795b-9fee-4e99-8873-375c57f9d65e/collection/45656967-6aeb5134-ce85-4b34-a1de-1378be8b7520?action=share&source=collection_link&creator=45656967"
+	},
+	"item": [
+		{
+			"name": "pcollection",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mzg3Nzg4LCJpYXQiOjE3NDkzODQxODgsImp0aSI6IjkzMmU4ZDBiYTA5YjQ5ZDA4MDY0Mzc3NTNmZDFkN2I5IiwidXNlcl9pZCI6Ijc4NjA2ZDViLTQzOTAtNDUzYi05NDBmLWVhMzAzMTMyMWUyZiJ9.AiJOkYDg3ECj_Nb8Yj_8yZQRyjRkkGh816SH4Fmj7co",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"gemmechu.bekele.berga@gmail.com\",\r\n  \"password\": \"gemmechubekeleberga\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/token/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"token",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pcollection",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mzg3Nzg4LCJpYXQiOjE3NDkzODQxODgsImp0aSI6IjkzMmU4ZDBiYTA5YjQ5ZDA4MDY0Mzc3NTNmZDFkN2I5IiwidXNlcl9pZCI6Ijc4NjA2ZDViLTQzOTAtNDUzYi05NDBmLWVhMzAzMTMyMWUyZiJ9.AiJOkYDg3ECj_Nb8Yj_8yZQRyjRkkGh816SH4Fmj7co",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"My First Chat\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pcollection",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ5Mzg3Nzg4LCJpYXQiOjE3NDkzODQxODgsImp0aSI6IjkzMmU4ZDBiYTA5YjQ5ZDA4MDY0Mzc3NTNmZDFkN2I5IiwidXNlcl9pZCI6Ijc4NjA2ZDViLTQzOTAtNDUzYi05NDBmLWVhMzAzMTMyMWUyZiJ9.AiJOkYDg3ECj_Nb8Yj_8yZQRyjRkkGh816SH4Fmj7co",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"conversation\": \"e419cbc2-24f1-4802-993a-3e437dfd1478\",\r\n  \"content\": \"Hello!\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/messages/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pcollection",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pcollection",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/conversations/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pcollection",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/messages/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

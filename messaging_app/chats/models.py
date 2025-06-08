@@ -75,6 +75,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
+    unread_messages = models.BooleanField(default=False)
 
 
     def __str__(self):

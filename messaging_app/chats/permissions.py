@@ -46,6 +46,13 @@ class IsParticipantOrAdmin(BasePermission):
     """
     message = 'You must be a participant or admin to access this resource.'
 
+    def has_permission(self, request, view):
+        # Allow authenticated users to create conversations
+        if view.action == 'create':
+            return request.user and request.user.is_authenticated
+        # Allow listing or retrieving as well (you can adjust this)
+        return request.user and request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
             return True
