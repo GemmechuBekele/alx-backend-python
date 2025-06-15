@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
 from .models import Message
 from django.contrib.auth import logout
@@ -13,6 +15,7 @@ def delete_user(request):
         user.delete()    # triggers the post_delete signal
         return redirect('home')  # redirect after deletion
 
+@cache_page(60) 
 @login_required
 def conversation_thread(request, user_id):
     user = request.user
