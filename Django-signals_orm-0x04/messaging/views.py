@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Message
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -21,7 +21,7 @@ def conversation_thread(request, user_id):
     # ✅ Optimized query using select_related and prefetch_related
     messages = (
         Message.objects
-        .filter(sender=user, receiver=other_user, parent_message__isnull=True)
+        .filter(sender=request.user, receiver=other_user, parent_message__isnull=True)
         .select_related('sender', 'receiver', 'parent_message')
         .prefetch_related('replies')
         .order_by('timestamp')
