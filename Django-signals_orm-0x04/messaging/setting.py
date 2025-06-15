@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'r@u&z(^)l-3vq=orfrevl*rm$wz0*@!p5eozgh)@)iw%^rc$u8'  
+SECRET_KEY = 'r@u&z(^)l-3vq=orfrevl*rm$wz0*@!p5eozgh)@)iw%^rc$u8'
 
 DEBUG = True
 
@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'messaging.apps.MessagingConfig',
     'Django_Chat',
 ]
 
