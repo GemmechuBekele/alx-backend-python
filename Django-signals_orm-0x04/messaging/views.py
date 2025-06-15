@@ -28,9 +28,10 @@ def conversation_thread(request, user_id):
     )
 
     def build_thread(message):
+        replies = Message.objects.filter(parent_message=message).select_related('sender', 'receiver')
         return {
             'message': message,
-            'replies': [build_thread(reply) for reply in message.replies.all()]
+            'replies': [build_thread(reply) for reply in replies]
         }
 
     threaded_messages = [build_thread(m) for m in messages]
