@@ -9,6 +9,9 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(null=True, blank=True)
     edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='edited_messages')
+    parent_message = models.ForeignKey(  # ✅ Self-referential field for threading
+        'self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return f"From {self.sender} to {self.receiver} at {self.timestamp}"
