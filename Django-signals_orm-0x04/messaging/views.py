@@ -44,7 +44,7 @@ def conversation_thread(request, user_id):
 @login_required
 def unread_inbox(request):
     user = request.user
-    unread_messages = Message.unread.unread_for_user(user)  # ✅ Use custom manager
+    unread_messages = Message.unread.unread_for_user(user).only('sender', 'content', 'timestamp')
     return render(request, 'messaging/unread_inbox.html', {
         'unread_messages': unread_messages
     })
