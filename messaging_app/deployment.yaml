@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: messaging
-        image: your-django-image-name:tag
+        image:image: gemmechubekele/messaging-app:latest
         ports:
         - containerPort: 8000
 ---
