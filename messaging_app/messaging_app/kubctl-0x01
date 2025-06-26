@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Scale deployment to 3 replicas
+echo "🔧 Scaling deployment 'messaging-app' to 3 replicas..."
+kubectl scale deployment messaging-app --replicas=3
+
+# Wait a few seconds for pods to be created
+sleep 10
+
+# List all pods
+echo "📋 Checking running pods:"
+kubectl get pods -l app=messaging
+
+# Optional: Run a load test using wrk
+echo "🚀 Performing load test (you must have wrk installed)..."
+echo "Example: wrk -t2 -c100 -d10s http://<ClusterIP>:<Port>"
+
+# Show resource usage (CPU/Memory)
+echo "📊 Monitoring resource usage:"
+kubectl top pods
