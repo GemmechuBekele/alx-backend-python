@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: messaging
-        image:image: gemmechubekele/messaging-app:latest
+        image:image: messaging-app:latest
         ports:
         - containerPort: 8000
 ---
