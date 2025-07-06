@@ -45,9 +45,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r messaging_app/requirements.txt
+          pip install flake8 coverage
 
-      - name: Run Django tests
+      - name: Run flake8 (fail on lint errors)
+        run: |
+          echo "Running flake8 lint check..."
+          flake8 messaging_app/
+          
+      - name: Run Django tests with coverage
         run: |
           cd messaging_app
-          python manage.py migrate
-          python manage.py test
+          coverage run manage.py test
+          coverage xml
+          coverage report
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: messaging_app/coverage.xml
