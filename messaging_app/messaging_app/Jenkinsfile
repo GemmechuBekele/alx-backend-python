@@ -3,13 +3,14 @@ pipeline {
 
     environment {
         VENV_DIR = '.venv'
-        IMAGE_NAME = 'gemmechu/messaging_app' // replace with your Docker Hub repo
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-creds', url: 'https://github.com/GemmechuBekele/alx-backend-python.git'
+                // ✅ Show current branch (requirement)
+                sh 'git branch'
             }
         }
 
@@ -18,8 +19,8 @@ pipeline {
                 sh '''
                     python3 -m venv ${VENV_DIR}
                     . ${VENV_DIR}/bin/activate
-                    pip install --upgrade pip
-                    pip install -r messaging_app/requirements.txt
+                    python3 -m pip install --upgrade pip
+                    pip3 install -r messaging_app/requirements.txt
                 '''
             }
         }
@@ -40,27 +41,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh """
-                        docker build -t ${IMAGE_NAME}:latest messaging_app/
-                    """
-                }
-            }
-        }
-
-        stage('Login to Docker Hub and Push Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE_NAME}:latest
-                    '''
-                }
-            }
-        }
     }
 }
-
